@@ -48,13 +48,13 @@ static int b[16];
 void   set(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,1);break;
 							case 1:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_3 ,1);break;
 							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,1);break;
-							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_4 ,1);break;
+							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_4 ,1);break;}
 }
 
 void reset(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,0);break;
 							case 1:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_3 ,0);break;
 							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,0);break;
-							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_4 ,0);break;
+							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_4 ,0);break;}
 }
 
 void readButton(){
@@ -70,7 +70,18 @@ void readButton(){
 
 	x++;
 	x = x % 4;
+
+//	for(int i =0;i<16;i++){
+//		if(b[i] == 0){
+//			return i;
+//		}
+//	}
+
 }
+
+static uint32_t timestamp = 0;
+
+
 
 //void b_to_16(){}
 
@@ -133,7 +144,16 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  readButton();
+	  int time1 = HAL_GetTick();
+	  if(time1>timestamp){
+		  timestamp = HAL_GetTick()+10;
+		  readButton();
+	  }
+//	  if(button_pressed == button_pressed_last){
+//		  if(button_pressed == 0){
+//
+//		  }
+//	  }
 
 	  int state = 0;
 
@@ -162,7 +182,6 @@ int main(void)
 		  if(b[2] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
 	  case 11:	//64340500051
 		  if(b[15] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
-
 	  case 12: //64340500051 OK
 	  	  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
 	  	  break;
