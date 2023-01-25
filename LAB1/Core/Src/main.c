@@ -57,7 +57,7 @@ void reset(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,0);break;
 							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_4 ,0);break;}
 }
 
-int readButton(){
+void readButton(){
 	static int x = 0;
 
 	b[(x*4)  ]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
@@ -71,13 +71,15 @@ int readButton(){
 	x++;
 	x = x % 4;
 
+}
+
+int get_readButton(){
 	for(int i =0;i<16;i++){
 		if(b[i] == 0){
 			return i;
 		}
 	}
 	return 99;
-
 }
 
 static uint32_t timestamp = 0;
@@ -155,10 +157,11 @@ int main(void)
 //		  timestamp = HAL_GetTick()+10;
 //		  readButton();
 //	  }
+	  readButton();
 
-	  button_pressed = readButton();
+	  button_pressed = get_readButton();
 
-	  if(button_pressed == button_pressed_last){
+	  if(button_pressed == button_pressed_last && button_pressed != 99){
 		  chk = 1;
 	  }
 	  if(button_pressed == 99){
