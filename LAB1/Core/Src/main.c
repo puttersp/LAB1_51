@@ -57,7 +57,7 @@ void reset(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,0);break;
 							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_4 ,0);break;}
 }
 
-void readButton(){
+int readButton(){
 	static int x = 0;
 
 	b[(x*4)  ]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
@@ -71,11 +71,12 @@ void readButton(){
 	x++;
 	x = x % 4;
 
-//	for(int i =0;i<16;i++){
-//		if(b[i] == 0){
-//			return i;
-//		}
-//	}
+	for(int i =0;i<16;i++){
+		if(b[i] == 0){
+			return i;
+		}
+	}
+	return 99;
 
 }
 
@@ -135,6 +136,11 @@ int main(void)
 	  b[i] = 1;
   }
 
+  int chk = 0;
+  int button_pressed_last = 0;
+  int button_pressed;
+  int state = 0;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -144,44 +150,106 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  int time1 = HAL_GetTick();
-	  if(time1>timestamp){
-		  timestamp = HAL_GetTick()+10;
-		  readButton();
-	  }
-//	  if(button_pressed == button_pressed_last){
-//		  if(button_pressed == 0){
-//
-//		  }
+//	  int time1 = HAL_GetTick();
+//	  if(time1>timestamp){
+//		  timestamp = HAL_GetTick()+10;
+//		  readButton();
 //	  }
 
-	  int state = 0;
+	  button_pressed = readButton();
+
+	  if(button_pressed == button_pressed_last){
+		  chk = 1;
+	  }
+	  if(button_pressed == 99){
+		  chk = 0;
+	  }
 
 	  switch(state){
 	  case 0:	//non pressed
-		  if(b[9] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 9){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 1:	// 6
-		  if(b[1] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 1){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 2:	// 64
-		  if(b[10] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 10){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 3:	// 643
-		  if(b[1] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 1){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 4:	// 6434
-		  if(b[3] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 3){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 5:	// 64340
-		  if(b[5] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 5){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 6:	//643405
-		  if(b[3] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 3){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 7:	//6434050
-		  if(b[3] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 3){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 8:	//64340500
-		  if(b[3] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 3){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 9:	//643405000
-		  if(b[5] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 3){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 10:	//6434050005
-		  if(b[2] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 2){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 11:	//64340500051
-		  if(b[15] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+		  if(chk == 0){
+			  if(button_pressed == 15){state++;}
+			  else if(button_pressed == 12){state=0;}
+			  else{state = 99;}
+			  break;
+		  }
 	  case 12: //64340500051 OK
 	  	  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
 	  	  break;
@@ -190,6 +258,7 @@ int main(void)
 		  break;
 	  }
 
+	  button_pressed_last = button_pressed;
   }
   /* USER CODE END 3 */
 }
