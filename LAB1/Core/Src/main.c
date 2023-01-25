@@ -43,7 +43,6 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
-
 static int b[16];
 
 void   set(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,1);break;
@@ -106,7 +105,9 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  for(int i=0;i<16;i++){
+  	  b[i] = 1;
+  	}
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -130,6 +131,44 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  readButton();
+
+	  int state = 0;
+
+	  switch(state){
+	  case 0:	//non pressed
+		  if(b[9] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 1:	// 6
+		  if(b[1] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 2:	// 64
+		  if(b[10] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 3:	// 643
+		  if(b[1] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 4:	// 6434
+		  if(b[3] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 5:	// 64340
+		  if(b[5] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 6:	//643405
+		  if(b[3] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 7:	//6434050
+		  if(b[3] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 8:	//64340500
+		  if(b[3] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 9:	//643405000
+		  if(b[5] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 10:	//6434050005
+		  if(b[2] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+	  case 11:	//64340500051
+		  if(b[15] == 0){state++;}else if(b[12]==0){state=0;}else{state = 99;}break;
+
+	  case 12: //64340500051 OK
+	  	  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
+	  	  break;
+	  case 99:
+		  if(b[12]){state=0;}
+		  break;
+	  }
+
   }
   /* USER CODE END 3 */
 }
