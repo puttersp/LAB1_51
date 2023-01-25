@@ -57,20 +57,54 @@ void reset(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,0);break;
 							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_4 ,0);break;}
 }
 
+//void readButton(){
+//	static int x = 0;
+//
+//	b[(x*4)  ]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
+//	b[(x*4)+1]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
+//	b[(x*4)+2]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
+//	b[(x*4)+3]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
+//
+//	set(x);
+//	reset((x+1)%4);
+//
+//	x++;
+//	x = x % 4;
+//
+//}
+
+
 void readButton(){
+
 	static int x = 0;
 
-	b[(x*4)  ]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
-	b[(x*4)+1]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
-	b[(x*4)+2]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
-	b[(x*4)+3]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
+	reset(0);
+	b[0]    = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
+	b[1]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
+	b[2]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
+	b[3]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
+	set(0);
 
-	set(x);
-	reset((x+1)%4);
+	reset(1);
+	b[4]    = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
+	b[5]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
+	b[6]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
+	b[7]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
+	set(1);
 
-	x++;
-	x = x % 4;
+	reset(2);
+	b[8]    = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
+	b[9]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
+	b[10]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
+	b[11]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
+	set(2);
 
+	reset(3);
+	b[12]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
+	b[13]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
+	b[14]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
+	b[15]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
+	set(3);
 }
 
 int get_readButton(){
@@ -82,7 +116,6 @@ int get_readButton(){
 	return 99;
 }
 
-static uint32_t timestamp = 0;
 
 
 
@@ -142,6 +175,11 @@ int main(void)
   int button_pressed_last = 0;
   int button_pressed;
   int state = 0;
+
+  set(0);
+  set(1);
+  set(2);
+  set(3);
 
   /* USER CODE END 2 */
 
