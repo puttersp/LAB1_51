@@ -43,9 +43,37 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
-typedef struct {
 
-}button;
+static int b[16];
+
+void   set(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,1);break;
+							case 1:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_3 ,1);break;
+							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,1);break;
+							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_4 ,1);break;
+}
+
+void reset(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,0);break;
+							case 1:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_3 ,0);break;
+							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,0);break;
+							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_4 ,0);break;
+}
+
+void readButton(){
+	static int x = 0;
+
+	b[(x*4)  ]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
+	b[(x*4)+1]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
+	b[(x*4)+2]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
+	b[(x*4)+3]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
+
+	set(x);
+	reset((x+1)%4);
+
+	x++;
+	x = x % 4;
+}
+
+//void b_to_16(){}
 
 /* USER CODE END PV */
 
