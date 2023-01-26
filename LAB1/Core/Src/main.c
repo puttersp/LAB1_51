@@ -79,6 +79,7 @@ void readButton(){
 	static int x = 0;
 
 	reset(0);
+	HAL_Delay(25);
 	b[0]    = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
 	b[1]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
 	b[2]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
@@ -86,6 +87,7 @@ void readButton(){
 	set(0);
 
 	reset(1);
+	HAL_Delay(25);
 	b[4]    = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
 	b[5]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
 	b[6]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
@@ -93,6 +95,7 @@ void readButton(){
 	set(1);
 
 	reset(2);
+	HAL_Delay(25);
 	b[8]    = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
 	b[9]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
 	b[10]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
@@ -100,6 +103,7 @@ void readButton(){
 	set(2);
 
 	reset(3);
+	HAL_Delay(25);
 	b[12]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
 	b[13]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
 	b[14]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
