@@ -195,8 +195,8 @@ int main(void)
   int button_pressed_last = 0;
   int button_pressed;
   int state = 0;
-  static uint16_t time1 = 0;
-  static uint16_t timestamp = 10;
+  static uint32_t time1 = 0;
+  static uint32_t timestamp = 10;
 
   HAL_TIM_Base_Start(&htim11);
 
@@ -211,10 +211,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  time1 = __HAL_TIM_GET_COUNTER(&htim11);
+	  time1 = HAL_GetTick();
 
 	  if(time1>timestamp){
-		  timestamp = __HAL_TIM_GET_COUNTER(&htim11)+10;
+		  timestamp = HAL_GetTick()+10;
 		  readButton();
 		  readButton();
 		  readButton();
