@@ -45,75 +45,28 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
-static int b[17];
+static int b[16];
+static int bp[16];
 GPIO_PinState HIGH = 1;
 GPIO_PinState LOW = 0;
 
-void   set(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,HIGH);break; //fix_init
-							case 1:HAL_GPIO_WritePin(GPIOC,GPIO_PIN_9 ,HIGH);break;
-							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,HIGH);break;
-							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8 ,HIGH);break;}
+static int b_state_curr,b_state_last;
+
+//fix_init
+
+void   set(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,HIGH);break;		//R1
+							case 1:HAL_GPIO_WritePin(GPIOC,GPIO_PIN_9 ,HIGH);break;		//R2
+							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,HIGH);break;		//R3
+							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8 ,HIGH);break;}	//R4
 }
 
-void reset(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,LOW);break;
-							case 1:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_9 ,LOW);break;
-							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,LOW);break;
-							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8 ,LOW);break;} //fix_end
+void reset(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,LOW);break;		//R1
+							case 1:HAL_GPIO_WritePin(GPIOC,GPIO_PIN_9 ,LOW);break;		//R2
+							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,LOW);break;		//R3
+							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8 ,LOW);break;}		//R4
 }
 
-void readButton(){
-	static int x = 0;
-
-	b[(x*4)  ]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
-	b[(x*4)+1]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
-	b[(x*4)+2]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
-	b[(x*4)+3]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
-
-	set(x);
-	reset((x+1)%4); //fix
-
-	x++;
-	x = x % 4;
-
-}
-
-
-//void readButton(){
-//
-//	static int x = 0;
-//
-//	reset(0);
-//	HAL_Delay(25);
-//	b[0]    = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
-//	b[1]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
-//	b[2]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
-//	b[3]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
-//	set(0);
-//
-//	reset(1);
-//	HAL_Delay(25);
-//	b[4]    = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
-//	b[5]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
-//	b[6]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
-//	b[7]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
-//	set(1);
-//
-//	reset(2);
-//	HAL_Delay(25);
-//	b[8]    = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
-//	b[9]    = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
-//	b[10]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
-//	b[11]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
-//	set(2);
-//
-//	reset(3);
-//	HAL_Delay(25);
-//	b[12]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
-//	b[13]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_3); //L2
-//	b[14]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_5); //L3
-//	b[15]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
-//	set(3);
-//}
+//fix_end
 
 int get_readButton(){
 	for(int i =0;i<16;i++){
@@ -124,6 +77,129 @@ int get_readButton(){
 	return 99;
 }
 
+int get_savedButton(){
+	for(int i =0;i<16;i++){
+		if(bp[i] == 0){
+			return i;
+		}
+	}
+	return 99;
+}
+
+void readButton(){
+	static int x = 0;
+	b_state_curr = 0;
+
+	b[(x*4)  ]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9); //L1
+	b[(x*4)+1]   = HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_7); //L2
+	b[(x*4)+2]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_6); //L3
+	b[(x*4)+3]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_7); //L4
+
+//	set(x);
+//	reset((x+1)%4); //fix
+
+	x++;
+	x = x % 4;
+
+	if(get_readButton() != 99){b_state_curr = 1;}
+
+}
+
+void statecheck(){
+
+	  static int state = 0;
+
+	  switch(state){
+	  case 0:	//non pressed
+			  if(get_savedButton() == 9){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=0;}
+			  else{state = 99;}
+			  break;
+	  case 1:	// 6
+			  if(get_savedButton() == 1){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=1;}
+			  else{state = 99;}
+			  break;
+	  case 2:	// 64
+			  if(get_savedButton() == 10){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=2;}
+			  else{state = 99;}
+			  break;
+	  case 3:	// 643
+			  if(get_savedButton() == 1){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=3;}
+			  else{state = 99;}
+			  break;
+	  case 4:	// 6434
+			  if(get_savedButton() == 3){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=4;}
+			  else{state = 99;}
+			  break;
+	  case 5:	// 64340
+			  if(get_savedButton() == 5){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=5;}
+			  else{state = 99;}
+			  break;
+	  case 6:	//643405
+			  if(get_savedButton() == 3){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=6;}
+			  else{state = 99;}
+			  break;
+	  case 7:	//6434050
+			  if(get_savedButton() == 3){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=7;}
+			  else{state = 99;}
+			  break;
+	  case 8:	//64340500
+			  if(get_savedButton() == 3){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=8;}
+			  else{state = 99;}
+			  break;
+	  case 9:	//643405000
+			  if(get_savedButton() == 5){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=9;}
+			  else{state = 99;}
+			  break;
+	  case 10:	//6434050005
+			  if(get_savedButton() == 2){state++;}
+			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 99){state=10;}
+			  else{state = 99;}
+			  break;
+	  case 11:	//64340500051
+			  if(get_savedButton() == 15){HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,1);}
+			  else if(get_savedButton() == 12){
+				  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
+				  state=0;
+			  }
+			  else if(get_savedButton() == 99){state=11;}
+			  else{state = 99;}
+			  break;
+//	  case 12: //64340500051 OK
+//	  	  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
+//	  	  break;
+	  case 99:
+		  if(get_savedButton() == 12){state=0;}
+		  break;
+	  }
+
+}
+
+void saveButton(){
+	for(int i=0;i<16;i++){
+		bp[i] = b[i];
+	}
+}
 //void b_to_16(){}
 
 /* USER CODE END PV */
@@ -150,6 +226,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+	static int process = 0;
 
   /* USER CODE END 1 */
 
@@ -175,162 +252,55 @@ int main(void)
   MX_TIM11_Init();
   /* USER CODE BEGIN 2 */
 
-//  for(int i=0;i<16;i++){
-//	  b[i] = 1;
-//  }
-
-  int chk = 0;
-  int button_pressed_last = 0;
-  int button_pressed;
-  int state = 0;
-  static uint32_t time1 = 0;
-  static uint32_t timestamp = 10;
-
-
-//  set(0);
-//  set(1);
-//  set(2);
-//  set(3);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  b[100] = 0;
+  bp[100] = 0;
+
   while (1)
   {
-//	  time1 = HAL_GetTick();
-//
-//	  if(time1>timestamp){
-//		  timestamp = HAL_GetTick()+10;
-//		  readButton();
-//		  readButton();
-//		  readButton();
-//		  readButton();
-//	  }
 
-	  reset(0);
-	  readButton();
-	  readButton();
-	  readButton();
-	  readButton();
-
-	  b[17] = 5;
-
-	  button_pressed = get_readButton();
-
-	  if(button_pressed == button_pressed_last && button_pressed != 99){
-		  chk = 1;
-	  }
-	  if(button_pressed == 99){
-		  chk = 0;
-	  }
-
-	  switch(state){
-	  case 0:	//non pressed
-		  if(chk == 0){
-			  if(button_pressed == 9){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=0;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 1:	// 6
-		  if(chk == 0){
-			  if(button_pressed == 1){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=1;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 2:	// 64
-		  if(chk == 0){
-			  if(button_pressed == 10){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=2;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 3:	// 643
-		  if(chk == 0){
-			  if(button_pressed == 1){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=3;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 4:	// 6434
-		  if(chk == 0){
-			  if(button_pressed == 3){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=4;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 5:	// 64340
-		  if(chk == 0){
-			  if(button_pressed == 5){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=5;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 6:	//643405
-		  if(chk == 0){
-			  if(button_pressed == 3){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=6;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 7:	//6434050
-		  if(chk == 0){
-			  if(button_pressed == 3){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=7;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 8:	//64340500
-		  if(chk == 0){
-			  if(button_pressed == 3){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=8;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 9:	//643405000
-		  if(chk == 0){
-			  if(button_pressed == 3){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=9;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 10:	//6434050005
-		  if(chk == 0){
-			  if(button_pressed == 2){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=10;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 11:	//64340500051
-		  if(chk == 0){
-			  if(button_pressed == 15){state++;}
-			  else if(button_pressed == 12){state=0;}
-			  else if(button_pressed == 99){state=11;}
-			  else{state = 99;}
-			  break;
-		  }
-	  case 12: //64340500051 OK
-	  	  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
-	  	  break;
-	  case 99:
-		  if(b[12]){state=0;}
+	  switch(process){
+	  case 0:
+		  reset(0);
+		  readButton();
+		  set(0);
+		  reset(1);
+		  process = 1;
 		  break;
-	  }
 
-	  button_pressed_last = button_pressed;
+	  case 1:
+	  	  readButton();
+	      set(1);
+	  	  reset(2);
+	  	  process = 2;
+	  	  break;
+
+	  case 2:
+	  	  readButton();
+	      set(2);
+	  	  reset(3);
+	  	  process = 3;
+	  	  break;
+
+  	  case 3:
+  		  readButton();
+  		  set(3);
+  		  reset(0);
+  		  if(b_state_curr == 1){
+  			  saveButton();
+  		  }
+  		  if(b_state_curr == 1 && b_state_last == 0){
+  			  statecheck();
+  		  }
+
+  		  b_state_last = b_state_curr;
+  		  process = 0;
+  		  break;
+	  }
   }
 
 
