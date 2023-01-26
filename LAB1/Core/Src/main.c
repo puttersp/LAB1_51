@@ -45,7 +45,7 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
-static int b[16];
+static int b[17];
 GPIO_PinState HIGH = 1;
 GPIO_PinState LOW = 0;
 
@@ -198,15 +198,23 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  time1 = HAL_GetTick();
+//	  time1 = HAL_GetTick();
+//
+//	  if(time1>timestamp){
+//		  timestamp = HAL_GetTick()+10;
+//		  readButton();
+//		  readButton();
+//		  readButton();
+//		  readButton();
+//	  }
 
-	  if(time1>timestamp){
-		  timestamp = HAL_GetTick()+10;
-		  readButton();
-		  readButton();
-		  readButton();
-		  readButton();
-	  }
+	  reset(0);
+	  readButton();
+	  readButton();
+	  readButton();
+	  readButton();
+
+	  b[17] = 5;
 
 	  button_pressed = get_readButton();
 
