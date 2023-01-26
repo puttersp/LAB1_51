@@ -47,6 +47,7 @@ UART_HandleTypeDef huart2;
 
 static int b[16];
 static int bp[16];
+
 GPIO_PinState HIGH = 1;
 GPIO_PinState LOW = 0;
 
@@ -108,73 +109,85 @@ void readButton(){
 void statecheck(){
 
 	  static int state = 0;
+	  static int fault = 0;
+	  static int faultState = 0;
 
 	  switch(state){
 	  case 0:	//non pressed
 			  if(get_savedButton() == 9){state++;}
 			  else if(get_savedButton() == 12){state=0;}
 			  else if(get_savedButton() == 99){state=0;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=0;}
 			  break;
 	  case 1:	// 6
 			  if(get_savedButton() == 1){state++;}
 			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=1;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=1;}
 			  break;
 	  case 2:	// 64
 			  if(get_savedButton() == 10){state++;}
 			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=2;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=2;}
 			  break;
 	  case 3:	// 643
 			  if(get_savedButton() == 1){state++;}
 			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=3;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=3;}
 			  break;
 	  case 4:	// 6434
 			  if(get_savedButton() == 3){state++;}
 			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=4;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=4;}
 			  break;
 	  case 5:	// 64340
 			  if(get_savedButton() == 5){state++;}
 			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=5;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=5;}
 			  break;
 	  case 6:	//643405
 			  if(get_savedButton() == 3){state++;}
 			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=6;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=6;}
 			  break;
 	  case 7:	//6434050
 			  if(get_savedButton() == 3){state++;}
 			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=7;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=7;}
 			  break;
 	  case 8:	//64340500
 			  if(get_savedButton() == 3){state++;}
 			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=8;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=8;}
 			  break;
 	  case 9:	//643405000
 			  if(get_savedButton() == 5){state++;}
 			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=9;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=9;}
 			  break;
 	  case 10:	//6434050005
 			  if(get_savedButton() == 2){state++;}
 			  else if(get_savedButton() == 12){state=0;}
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=10;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=10;}
 			  break;
 	  case 11:	//64340500051
 			  if(get_savedButton() == 15){HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,1);}
@@ -182,14 +195,22 @@ void statecheck(){
 				  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
 				  state=0;
 			  }
+			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=11;}
-			  else{state = 99;}
+			  else{state = 99;fault++;faultState=11;}
 			  break;
 //	  case 12: //64340500051 OK
 //	  	  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
 //	  	  break;
 	  case 99:
 		  if(get_savedButton() == 12){state=0;}
+		  if(get_savedButton() == 13){fault--;}
+		  else{fault++;}
+
+		  if(fault == 0){
+			  state = faultState;
+		  }
+
 		  break;
 	  }
 
@@ -290,10 +311,11 @@ int main(void)
   		  readButton();
   		  set(3);
   		  reset(0);
-  		  if(b_state_curr == 1){
-  			  saveButton();
-  		  }
+//  		  if(b_state_curr == 1){
+//  			  saveButton();
+//  		  }
   		  if(b_state_curr == 1 && b_state_last == 0){
+  			  saveButton();
   			  statecheck();
   		  }
 
