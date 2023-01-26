@@ -46,17 +46,19 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 
 static int b[16];
+GPIO_PinState HIGH = 1;
+GPIO_PinState LOW = 0;
 
-void   set(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,1);break;
-							case 1:HAL_GPIO_WritePin(GPIOC,GPIO_PIN_9 ,1);break;
-							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,1);break;
-							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8 ,1);break;}
+void   set(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,HIGH);break; //fix_init
+							case 1:HAL_GPIO_WritePin(GPIOC,GPIO_PIN_9 ,HIGH);break;
+							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,HIGH);break;
+							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8 ,HIGH);break;}
 }
 
-void reset(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,0);break;
-							case 1:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_9 ,0);break;
-							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,0);break;
-							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8 ,0);break;}
+void reset(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,LOW);break;
+							case 1:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_9 ,LOW);break;
+							case 2:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5 ,LOW);break;
+							case 3:HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8 ,LOW);break;} //fix_end
 }
 
 void readButton(){
@@ -68,7 +70,7 @@ void readButton(){
 	b[(x*4)+3]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4); //L4
 
 	set(x);
-	reset((x+1)%4);
+	reset((x+1)%4); //fix
 
 	x++;
 	x = x % 4;
@@ -122,20 +124,6 @@ int get_readButton(){
 	return 99;
 }
 
-//const uint32_t freq = 1000000; // Freq in Hz
-//
-//uint32_t get_ticks()
-//{
-//    uint32_t ticks = __HAL_TIM_GET_COUNTER(&htim11);
-//    return ticks;
-//}
-//double ticks_to_seconds(uint32_t ticks)
-//{
-//    double seconds = (double) ticks/freq;
-//    return seconds;
-//}
-
-
 //void b_to_16(){}
 
 /* USER CODE END PV */
@@ -187,9 +175,9 @@ int main(void)
   MX_TIM11_Init();
   /* USER CODE BEGIN 2 */
 
-  for(int i=0;i<16;i++){
-	  b[i] = 1;
-  }
+//  for(int i=0;i<16;i++){
+//	  b[i] = 1;
+//  }
 
   int chk = 0;
   int button_pressed_last = 0;
@@ -198,7 +186,6 @@ int main(void)
   static uint32_t time1 = 0;
   static uint32_t timestamp = 10;
 
-  HAL_TIM_Base_Start(&htim11);
 
 //  set(0);
 //  set(1);
@@ -213,14 +200,13 @@ int main(void)
   {
 	  time1 = HAL_GetTick();
 
-	  if(time1>timestamp){
-		  timestamp = HAL_GetTick()+10;
+//	  if(time1>timestamp){
+//		  timestamp = HAL_GetTick()+10;
 		  readButton();
 		  readButton();
 		  readButton();
 		  readButton();
-		  readButton();
-	  }
+//	  }
 
 	  button_pressed = get_readButton();
 
