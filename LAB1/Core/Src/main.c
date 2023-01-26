@@ -200,13 +200,13 @@ int main(void)
   {
 	  time1 = HAL_GetTick();
 
-//	  if(time1>timestamp){
-//		  timestamp = HAL_GetTick()+10;
+	  if(time1>timestamp){
+		  timestamp = HAL_GetTick()+10;
 		  readButton();
 		  readButton();
 		  readButton();
 		  readButton();
-//	  }
+	  }
 
 	  button_pressed = get_readButton();
 
@@ -230,6 +230,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 1){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=1;}
 			  else{state = 99;}
 			  break;
 		  }
@@ -237,6 +238,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 10){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=2;}
 			  else{state = 99;}
 			  break;
 		  }
@@ -244,6 +246,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 1){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=3;}
 			  else{state = 99;}
 			  break;
 		  }
@@ -251,6 +254,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 3){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=4;}
 			  else{state = 99;}
 			  break;
 		  }
@@ -258,6 +262,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 5){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=5;}
 			  else{state = 99;}
 			  break;
 		  }
@@ -265,6 +270,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 3){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=6;}
 			  else{state = 99;}
 			  break;
 		  }
@@ -272,6 +278,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 3){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=7;}
 			  else{state = 99;}
 			  break;
 		  }
@@ -279,6 +286,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 3){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=8;}
 			  else{state = 99;}
 			  break;
 		  }
@@ -286,6 +294,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 3){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=9;}
 			  else{state = 99;}
 			  break;
 		  }
@@ -293,6 +302,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 2){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=10;}
 			  else{state = 99;}
 			  break;
 		  }
@@ -300,6 +310,7 @@ int main(void)
 		  if(chk == 0){
 			  if(button_pressed == 15){state++;}
 			  else if(button_pressed == 12){state=0;}
+			  else if(button_pressed == 99){state=11;}
 			  else{state = 99;}
 			  break;
 		  }
