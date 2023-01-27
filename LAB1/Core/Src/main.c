@@ -285,45 +285,47 @@ int main(void)
 
   while (1)
   {
-//	  if(time>timestamp){
-//
-//	  }
-	  switch(process){
-	  case 0:
-		  reset(0);
-		  readButton();
-		  set(0);
-		  reset(1);
-		  process = 1;
-		  break;
+	  if(HAL_GetTick()>timestamp){
+		  timestamp = HAL_GetTick()+50;
 
-	  case 1:
-	  	  readButton();
-	      set(1);
-	  	  reset(2);
-	  	  process = 2;
-	  	  break;
+		  switch(process){
+		  case 0:
+			  reset(0);
+			  readButton();
+			  set(0);
+			  reset(1);
+			  process = 1;
+			  break;
 
-	  case 2:
-	  	  readButton();
-	      set(2);
-	  	  reset(3);
-	  	  process = 3;
-	  	  break;
+		  case 1:
+		  	  readButton();
+		      set(1);
+		  	  reset(2);
+		  	  process = 2;
+		  	  break;
 
-  	  case 3:
-  		  readButton();
-  		  set(3);
-  		  reset(0);
+		  case 2:
+		  	  readButton();
+		      set(2);
+		  	  reset(3);
+		  	  process = 3;
+		  	  break;
 
-  		  if(b_state_curr == 1 && b_state_last == 0){
-  			  saveButton();
-  			  statecheck();
-  		  }
+	  	  case 3:
+	  		  readButton();
+	  		  set(3);
+	  		  reset(0);
 
-  		  b_state_last = b_state_curr;
-  		  process = 0;
-  		  break;
+	  		  if(b_state_curr == 1 && b_state_last == 0){
+	  			  saveButton();
+	  			  statecheck();
+	  		  }
+
+	  		  b_state_last = b_state_curr;
+	  		  process = 0;
+	  		  break;
+		  }
+
 	  }
   }
 
