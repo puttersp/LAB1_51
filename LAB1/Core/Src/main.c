@@ -53,6 +53,9 @@ GPIO_PinState LOW = 0;
 
 static int b_state_curr,b_state_last;
 
+static uint32_t timestamp = 100;
+static uint32_t time = 0;
+
 //fix_init
 
 void   set(int x){switch(x){case 0:HAL_GPIO_WritePin(GPIOA,GPIO_PIN_10,HIGH);break;		//R1
@@ -114,6 +117,7 @@ void statecheck(){
 
 	  switch(state){
 	  case 0:	//non pressed
+		  	  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
 			  if(get_savedButton() == 9){state++;}
 			  else if(get_savedButton() == 12){state=0;}
 			  else if(get_savedButton() == 99){state=0;}
@@ -190,20 +194,18 @@ void statecheck(){
 			  else{state = 99;fault++;faultState=10;}
 			  break;
 	  case 11:	//64340500051
-			  if(get_savedButton() == 15){HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,1);}
-			  else if(get_savedButton() == 12){
-				  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
-				  state=0;
-			  }
+			  if(get_savedButton() == 15){HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,1);state++;}
+			  else if(get_savedButton() == 12){state=0;}
 			  else if(get_savedButton() == 13){state--;}
 			  else if(get_savedButton() == 99){state=11;}
 			  else{state = 99;fault++;faultState=11;}
 			  break;
-//	  case 12: //64340500051 OK
-//	  	  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
-//	  	  break;
+	  case 12: //64340500051 OK
+	  	  if(get_savedButton() == 99){state=12;}
+	  	  else if(get_savedButton() == 12){HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);state=0;}
+	  	  break;
 	  case 99:
-		  if(get_savedButton() == 12){state=0;}
+		  if(get_savedButton() == 12){state=0;fault=0;}
 		  if(get_savedButton() == 13){fault--;}
 		  else{fault++;}
 
@@ -283,7 +285,9 @@ int main(void)
 
   while (1)
   {
-
+//	  if(time>timestamp){
+//
+//	  }
 	  switch(process){
 	  case 0:
 		  reset(0);
@@ -311,9 +315,7 @@ int main(void)
   		  readButton();
   		  set(3);
   		  reset(0);
-//  		  if(b_state_curr == 1){
-//  			  saveButton();
-//  		  }
+
   		  if(b_state_curr == 1 && b_state_last == 0){
   			  saveButton();
   			  statecheck();
