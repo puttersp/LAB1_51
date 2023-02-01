@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00020014  2**0
                   CONTENTS, READONLY
- 12 .debug_info   0000da88  00000000  00000000  00020044  2**0
+ 12 .debug_info   0000da76  00000000  00000000  00020044  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00001d3a  00000000  00000000  0002dacc  2**0
+ 13 .debug_abbrev 00001d3a  00000000  00000000  0002daba  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000c20  00000000  00000000  0002f808  2**3
+ 14 .debug_aranges 00000c20  00000000  00000000  0002f7f8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 00000b78  00000000  00000000  00030428  2**3
+ 15 .debug_ranges 00000b78  00000000  00000000  00030418  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  00015915  00000000  00000000  00030fa0  2**0
+ 16 .debug_macro  00015915  00000000  00000000  00030f90  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000ddca  00000000  00000000  000468b5  2**0
+ 17 .debug_line   0000ddca  00000000  00000000  000468a5  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0008a057  00000000  00000000  0005467f  2**0
+ 18 .debug_str    0008a052  00000000  00000000  0005466f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  000de6d6  2**0
+ 19 .comment      00000050  00000000  00000000  000de6c1  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000032cc  00000000  00000000  000de728  2**2
+ 20 .debug_frame  000032cc  00000000  00000000  000de714  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -351,8 +351,8 @@ Disassembly of section .text:
  80004da:	bf00      	nop
 
 080004dc <set>:
+
 static uint32_t timestamp = 100;
-static uint32_t time = 0;
 
 //fix_init
 
@@ -613,8 +613,6 @@ void readButton(){
  80006d0:	4a11      	ldr	r2, [pc, #68]	; (8000718 <readButton+0xbc>)
  80006d2:	f842 1023 	str.w	r1, [r2, r3, lsl #2]
 
-//	set(x);
-//	reset((x+1)%4); //fix
 
 	x++;
  80006d6:	4b0f      	ldr	r3, [pc, #60]	; (8000714 <readButton+0xb8>)

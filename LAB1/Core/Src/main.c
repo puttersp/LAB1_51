@@ -54,7 +54,6 @@ GPIO_PinState LOW = 0;
 static int b_state_curr,b_state_last;
 
 static uint32_t timestamp = 100;
-static uint32_t time = 0;
 
 //fix_init
 
@@ -99,8 +98,6 @@ void readButton(){
 	b[(x*4)+2]   = HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_6); //L3
 	b[(x*4)+3]   = HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_7); //L4
 
-//	set(x);
-//	reset((x+1)%4); //fix
 
 	x++;
 	x = x % 4;
