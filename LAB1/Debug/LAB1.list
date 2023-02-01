@@ -1706,10 +1706,10 @@ int main(void)
  8000ec4:	681b      	ldr	r3, [r3, #0]
  8000ec6:	429a      	cmp	r2, r3
  8000ec8:	d957      	bls.n	8000f7a <main+0xe6>
-		  timestamp = HAL_GetTick()+50;
+		  timestamp = HAL_GetTick()+10;
  8000eca:	f000 fc0d 	bl	80016e8 <HAL_GetTick>
  8000ece:	4603      	mov	r3, r0
- 8000ed0:	3332      	adds	r3, #50	; 0x32
+ 8000ed0:	330a      	adds	r3, #10
  8000ed2:	4a2d      	ldr	r2, [pc, #180]	; (8000f88 <main+0xf4>)
  8000ed4:	6013      	str	r3, [r2, #0]
 

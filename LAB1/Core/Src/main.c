@@ -283,7 +283,7 @@ int main(void)
   while (1)
   {
 	  if(HAL_GetTick()>timestamp){
-		  timestamp = HAL_GetTick()+50;
+		  timestamp = HAL_GetTick()+10;
 
 		  switch(process){
 		  case 0:
